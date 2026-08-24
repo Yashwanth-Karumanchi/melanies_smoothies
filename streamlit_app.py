@@ -36,9 +36,12 @@ if ingredients_list:
             """
             INSERT INTO SMOOTHIES.PUBLIC.ORDERS
             (INGREDIENTS, NAME_ON_ORDER)
-            VALUES (%s, %s)
+            VALUES (%(ingredients)s, %(name)s)
             """,
-            (ingredients_string, name_on_order)
+            {
+                "ingredients": ingredients_string,
+                "name": name_on_order
+            }
         )
 
         st.success(
