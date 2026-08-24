@@ -1,4 +1,5 @@
 import streamlit as st
+import requests  
 
 st.title(":cup_with_straw: Customize Your Smoothie :cup_with_straw:")
 st.write("Choose the fruits you want in your custom Smoothie!")
@@ -23,7 +24,9 @@ ingredients_list = st.multiselect(
 )
 
 if ingredients_list:
-    ingredients_string = " ".join(ingredients_list)
+    ingredients_string = += fruit_chosen
+    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")  
+    sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
     time_to_insert = st.button("Submit Order")
 
@@ -43,8 +46,3 @@ if ingredients_list:
             "Your Smoothie is ordered, " + name_on_order + "!",
             icon="✅"
         )
-
-import requests  
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")  
-# st.text(smoothiefroot_response.json())
-sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
