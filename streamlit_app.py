@@ -1,5 +1,4 @@
 import streamlit as st
-from snowflake.snowpark.functions import col
 
 st.title(":cup_with_straw: Customize Your Smoothie :cup_with_straw:")
 st.write("Choose the fruits you want in your custom Smoothie!")
@@ -9,11 +8,13 @@ st.write("The name on your Smoothie will be:", name_on_order)
 
 cnx = st.connection("snowflake")
 
+# Read fruit options
 my_dataframe = cnx.query(
     """
     SELECT FRUIT_NAME
     FROM SMOOTHIES.PUBLIC.FRUIT_OPTIONS
-    """
+    """,
+    ttl=0
 )
 
 ingredients_list = st.multiselect(
@@ -28,12 +29,16 @@ if ingredients_list:
     time_to_insert = st.button("Submit Order")
 
     if time_to_insert:
-        cnx.query(
-            f"""
+
+        cursor = cnx.cursor()
+
+        cursor.execute(
+            """
             INSERT INTO SMOOTHIES.PUBLIC.ORDERS
             (INGREDIENTS, NAME_ON_ORDER)
-            VALUES ('{ingredients_string}', '{name_on_order}')
-            """
+            VALUES (%s, %s)
+            """,
+            (ingredients_string, name_on_order)
         )
 
         st.success(
