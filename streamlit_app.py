@@ -1,5 +1,6 @@
 import streamlit as st
-import requests  
+import requests
+import pandas as pd
 
 st.title(":cup_with_straw: Customize Your Smoothie :cup_with_straw:")
 st.write("Choose the fruits you want in your custom Smoothie!")
@@ -17,6 +18,8 @@ my_dataframe = cnx.query(
     ttl=0
 )
 
+pd_df = pd.DataFrame(my_dataframe)
+
 ingredients_list = st.multiselect(
     "Choose up to 5 ingredients:",
     my_dataframe["FRUIT_NAME"],
@@ -29,17 +32,25 @@ if ingredients_list:
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
 
-        st.subheader(fruit_chosen + ' Nutrition Information')
-
-        search_on = my_dataframe.loc[
-            my_dataframe["FRUIT_NAME"] == fruit_chosen,
-            "SEARCH_ON"
+        search_on = pd_df.loc[
+            pd_df['FRUIT_NAME'] == fruit_chosen,
+            'SEARCH_ON'
         ].iloc[0]
+
+        st.write(
+            'The search value for ',
+            fruit_chosen,
+            ' is ',
+            search_on,
+            '.'
+        )
+
+        st.subheader(fruit_chosen + ' Nutrition Information')
 
         smoothiefroot_response = requests.get(
             "https://my.smoothiefroot.com/api/fruit/" + search_on
         )
-    
+
         sf_df = st.dataframe(
             data=smoothiefroot_response.json(),
             use_container_width=True
