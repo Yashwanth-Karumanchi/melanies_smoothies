@@ -8,7 +8,6 @@ st.write("The name on your Smoothie will be:", name_on_order)
 
 cnx = st.connection("snowflake")
 
-# Read fruit options
 my_dataframe = cnx.query(
     """
     SELECT FRUIT_NAME
@@ -29,7 +28,6 @@ if ingredients_list:
     time_to_insert = st.button("Submit Order")
 
     if time_to_insert:
-
         cursor = cnx.cursor()
 
         cursor.execute(
