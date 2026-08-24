@@ -11,7 +11,7 @@ cnx = st.connection("snowflake")
 
 my_dataframe = cnx.query(
     """
-    SELECT FRUIT_NAME
+    SELECT FRUIT_NAME, SEARCH_ON
     FROM SMOOTHIES.PUBLIC.FRUIT_OPTIONS
     """,
     ttl=0
@@ -29,10 +29,15 @@ if ingredients_list:
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
 
-        st.subheader(fruit_chosen+ ' Nutrition Information')
+        st.subheader(fruit_chosen + ' Nutrition Information')
+
+        search_on = my_dataframe.loc[
+            my_dataframe["FRUIT_NAME"] == fruit_chosen,
+            "SEARCH_ON"
+        ].iloc[0]
 
         smoothiefroot_response = requests.get(
-            "https://my.smoothiefroot.com/api/fruit/" + fruit_chosen
+            "https://my.smoothiefroot.com/api/fruit/" + search_on
         )
     
         sf_df = st.dataframe(
