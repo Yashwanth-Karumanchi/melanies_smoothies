@@ -29,19 +29,16 @@ if ingredients_list:
 
     if time_to_insert:
         cursor = cnx.cursor()
-
+    
         cursor.execute(
             """
             INSERT INTO SMOOTHIES.PUBLIC.ORDERS
             (INGREDIENTS, NAME_ON_ORDER)
-            VALUES (%(ingredients)s, %(name)s)
+            VALUES (?, ?)
             """,
-            {
-                "ingredients": ingredients_string,
-                "name": name_on_order
-            }
+            [ingredients_string, name_on_order]
         )
-
+    
         st.success(
             "Your Smoothie is ordered, " + name_on_order + "!",
             icon="✅"
